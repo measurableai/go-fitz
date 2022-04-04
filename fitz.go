@@ -147,15 +147,8 @@ func NewFromMemory(b []byte) (f *Document, err error) {
 		return
 	}
 
-	magic := contentType(b)
-	if magic == "" {
-		err = ErrOpenMemory
-		return
-	}
+	cmagic := C.CString("application/pdf")
 
-	f.data = b
-
-	cmagic := C.CString(magic)
 	defer C.free(unsafe.Pointer(cmagic))
 
 	f.doc = C.open_document_with_stream(f.ctx, cmagic, f.stream)
